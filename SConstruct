@@ -4,7 +4,7 @@ env.VariantDir("build", "src")
 env.AppendUnique(CPPPATH=["src"])
 
 if "msvc" in env["TOOLS"]:
-	#env.AppendUnique(CXXFLAGS=["/O2"])
+	env.AppendUnique(CXXFLAGS=["/O2"])
 	#env.AppendUnique(CXXFLAGS=["/DEBUG"])
 	env.AppendUnique(CXXFLAGS=["/EHsc"])
 
