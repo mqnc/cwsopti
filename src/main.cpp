@@ -14,12 +14,6 @@ using namespace tinyply;
 using Vec = Vector3d;
 using Mat = Matrix3d;
 
-struct float2 { float x, y; };
-struct float3 { float x, y, z; };
-struct double3 { double x, y, z; };
-struct uint3 { uint32_t x, y, z; };
-struct uint4 { uint32_t x, y, z, w; };
-
 void read_ply_file(const std::string & filepath)
 {
 	try
@@ -49,20 +43,21 @@ void read_ply_file(const std::string & filepath)
 		if (vertices) std::cout << "\tRead " << vertices->count << " total vertices "<< std::endl;
 		if (faces) std::cout << "\tRead " << faces->count << " total faces (triangles) " << std::endl;
 
-		// type casting to your own native types - Option A
-		{
-			const size_t numVerticesBytes = vertices->buffer.size_bytes();
-			std::vector<float3> verts(vertices->count);
-			std::memcpy(verts.data(), vertices->buffer.get(), numVerticesBytes);
+		if (vertices->t == Type::FLOAT32) {
+			struct float3 { float x, y, z; };
+			std::vector<float3> vbuffer(vertices->count);
+			std::memcpy(vbuffer.data(), vertices->buffer.get(), vertices->buffer.size_bytes());
+		}
+		if (vertices->t == Type::FLOAT64) {
+			struct double3 { double x, y, z; };
+			std::vector<double3> vbuffer(vertices->count);
+			std::memcpy(vbuffer.data(), vertices->buffer.get(), vertices->buffer.size_bytes());
 		}
 
-		// type casting to your own native types - Option B
-		{
-			std::vector<float3> verts_floats;
-			std::vector<double3> verts_doubles;
-			if (vertices->t == tinyply::Type::FLOAT32) { /* as floats ... */ }
-			if (vertices->t == tinyply::Type::FLOAT64) { /* as doubles ... */ }
-		}
+		struct uint3 { uint32_t x, y, z; };
+		std::vector<uint3> fbuffer(faces->count);
+		std::memcpy(fbuffer.data(), faces->buffer.get(), faces->buffer.size_bytes());
+
 	}
 	catch (const std::exception & e)
 	{
