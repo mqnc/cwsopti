@@ -4,6 +4,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <utility>
+#include <unordered_map>
 #include <Eigen/Eigen>
 
 using Vec = Eigen::Vector3d;
@@ -14,3 +16,9 @@ struct Mesh{
 	std::vector<Vec> v;
 	std::vector<Tri> f;
 };
+
+using Edge = std::pair<uint32_t, uint32_t>;
+
+std::vector<Edge> getEdges(Mesh){
+
+}
