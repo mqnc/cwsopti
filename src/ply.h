@@ -65,6 +65,8 @@ Mesh read_ply_file(const std::string & fname)
 		for (uint32_t i=0; i<faces->count; i++){
 			result.f[i] = {fbuffer[i].v1, fbuffer[i].v2, fbuffer[i].v3};
 		}
+
+		result.findEdges();
 	}
 	catch (const std::exception & e)
 	{
