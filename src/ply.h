@@ -46,7 +46,6 @@ Mesh read_ply_file(const std::string & fname)
 			result.v.resize(vertices->count);
 			for (uint32_t i=0; i<vertices->count; i++){
 				result.v[i] << vbuffer[i].x, vbuffer[i].y, vbuffer[i].z;
-				result.v[i].normalize();
 			}
 		}
 		if (vertices->t == Type::FLOAT64) {
@@ -56,7 +55,6 @@ Mesh read_ply_file(const std::string & fname)
 			result.v.resize(vertices->count);
 			for (uint32_t i=0; i<vertices->count; i++){
 				result.v[i] << vbuffer[i].x, vbuffer[i].y, vbuffer[i].z;
-				result.v[i].normalize();
 			}
 		}
 
