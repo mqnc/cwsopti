@@ -14,4 +14,4 @@ else:
 	env.AppendUnique(CXXFLAGS=["-std=c++14"])
 	env.AppendUnique(LINKFLAGS=["-pthread"])
 
-env.Program("program", ["build/main.cpp"])
+env.Program("program", ["build/main.cpp", "build/sh/spherical_harmonics.cc", "build/sh/default_image.cc"])
