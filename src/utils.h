@@ -1,11 +1,14 @@
 
 #pragma once
 
-#include <iostream>
+#include <chrono>
 #include <fstream>
+#include <iostream>
+#include <random>
 #include <string>
-#include <utility>
 #include <unordered_set>
+#include <utility>
+
 #include <Eigen/Eigen>
 
 using Idx = std::size_t;
@@ -13,6 +16,8 @@ using Vec = Eigen::Vector3d;
 using Mat = Eigen::Matrix3d;
 using Edge = std::array<Idx, 2>;
 using Tri = std::array<Idx, 3>;
+using MatrixXd = Eigen::MatrixXd;
+using MatrixXV = Eigen::Matrix<Vec, Eigen::Dynamic, Eigen::Dynamic>;
 
 struct EdgeHash{
 	std::size_t operator()(Edge const& e) const noexcept{
