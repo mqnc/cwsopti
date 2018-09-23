@@ -60,3 +60,13 @@ struct Mesh{
 inline double edgeRadius(const Vec& p1, const Vec& n1, const Vec& p2, const Vec& n2){
 	return (p2-p1).squaredNorm() / (n2-n1).dot(p2-p1);
 }
+
+inline double volume(const Mesh& mesh){
+	double V=0;
+
+	for(auto& f:mesh.f){
+		V += mesh.v[f[0]] .dot( mesh.v[f[1]] .cross( mesh.v[f[2]] ));
+	}
+
+	return V;
+}
