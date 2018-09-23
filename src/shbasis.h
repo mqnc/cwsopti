@@ -8,11 +8,17 @@
 // using MatrixXV = Eigen::Matrix<Vec, Eigen::Dynamic, Eigen::Dynamic>;
 
 Vec perp1(Vec v){
-	return (Vec(v.y(), v.z(), -v.x()).cross(v)).normalized();
+	if(fabs(v.x()) <= fabs(v.y()) && fabs(v.x()) <= fabs(v.z())){
+		return v.cross(Vec(1,0,0)).normalized();
+	}
+	if(fabs(v.y()) <= fabs(v.z())){
+		return v.cross(Vec(0,1,0)).normalized();
+	}
+	return v.cross(Vec(0,0,1)).normalized();
 }
 
 Vec perp2(Vec v){
-	return v.cross(perp1(v));
+	return v.cross(perp1(v)).normalized();
 }
 
 class ShBasis{
@@ -60,8 +66,8 @@ public:
 				Vec t2 = perp2(dir);
 
 				double b0  = sh::EvalSH(lmPairs[ih].l, lmPairs[ih].m, dir.normalized());
-				double db1 = sh::EvalSH(lmPairs[ih].l, lmPairs[ih].m, (dir+eps*t1).normalized());
-				double db2 = sh::EvalSH(lmPairs[ih].l, lmPairs[ih].m, (dir+eps*t2).normalized());
+				double db1 = sh::EvalSH(lmPairs[ih].l, lmPairs[ih].m, (dir+eps*t1).normalized()) - b0;
+				double db2 = sh::EvalSH(lmPairs[ih].l, lmPairs[ih].m, (dir+eps*t2).normalized()) - b0;
 
 				basis(ih, iDir) = b0;
 				diffBasis(ih, iDir) = db1/eps*t1 + db2/eps*t2;
