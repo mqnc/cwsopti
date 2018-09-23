@@ -19,7 +19,7 @@ class ShBasis{
 public:
 
 	const Idx degree;
-	const Idx basisSize;
+	Idx nHarmonics;
 	const std::vector<Vec> dirs;
 
 	MatrixXd basis;
@@ -28,40 +28,43 @@ public:
 	struct lm{int l; int m;};
 	vector<lm> lmPairs;
 
-	ShBasis(Idx degree, const std::vector<Vec>& dirs, double eps=1e-5):
+	enum symmetry{
+		EVEN, // only allow even degree harmonics where h(n) == h(-n)
+		ODD, // only allow odd degree harmonics where h(n) == -h(-n)
+		BOTH
+	};
+
+	ShBasis(Idx degree, const std::vector<Vec>& dirs, double sym=BOTH, double eps=1e-5):
 		degree(degree),
-		basisSize((degree+1)*(degree+1)),
 		dirs(dirs)
 	{
 		Idx nDirs = dirs.size();
-
-		basis = MatrixXd(basisSize, nDirs);
-		diffBasis = MatrixXV(basisSize, nDirs);
-		lmPairs = vector<lm>(basisSize);
 		
-		{	
-			Idx i=0;
-			for(int l=0; l<=degree; l++){
-				for(int m=-l; m<=l; m++){
-					lmPairs[i] = {l, m};
-					i++;
-				}
+		nHarmonics=0;
+		for(int l=0; l<=degree; l++){
+			if(sym==EVEN && l%2==1 || sym==ODD && l%2==0){continue;}
+			for(int m=-l; m<=l; m++){
+				lmPairs.push_back({l, m});
+				nHarmonics++;
 			}
 		}
 
-		for(Idx ilm=0; ilm<basisSize; ilm++){
+		basis = MatrixXd(nHarmonics, nDirs);
+		diffBasis = MatrixXV(nHarmonics, nDirs);
+
+		for(Idx ih=0; ih<nHarmonics; ih++){
 			for(Idx iDir=0; iDir<nDirs; iDir++){
 				auto dir = dirs[iDir];
 
 				Vec t1 = perp1(dir);
 				Vec t2 = perp2(dir);
 
-				double b0  = sh::EvalSH(lmPairs[ilm].l, lmPairs[ilm].m, dir.normalized());
-				double db1 = sh::EvalSH(lmPairs[ilm].l, lmPairs[ilm].m, (dir+eps*t1).normalized());
-				double db2 = sh::EvalSH(lmPairs[ilm].l, lmPairs[ilm].m, (dir+eps*t2).normalized());
+				double b0  = sh::EvalSH(lmPairs[ih].l, lmPairs[ih].m, dir.normalized());
+				double db1 = sh::EvalSH(lmPairs[ih].l, lmPairs[ih].m, (dir+eps*t1).normalized());
+				double db2 = sh::EvalSH(lmPairs[ih].l, lmPairs[ih].m, (dir+eps*t2).normalized());
 
-				basis(ilm, iDir) = b0;
-				diffBasis(ilm, iDir) = db1/eps*t1 + db2/eps*t2;
+				basis(ih, iDir) = b0;
+				diffBasis(ih, iDir) = db1/eps*t1 + db2/eps*t2;
 			}
 		}
 	}

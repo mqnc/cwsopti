@@ -55,3 +55,8 @@ struct Mesh{
 		}
 	}
 };
+
+// curve radius of an edge acc. to https://computergraphics.stackexchange.com/a/1719
+inline double edgeRadius(const Vec& p1, const Vec& n1, const Vec& p2, const Vec& n2){
+	return (p2-p1).squaredNorm() / (n2-n1).dot(p2-p1);
+}
