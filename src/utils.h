@@ -34,6 +34,7 @@ struct Mesh{
 	std::vector<Vec> n;
 	std::vector<Tri> f;
 	std::vector<Edge> e;
+	std::vector<std::vector<Idx>> nb; // vertex neighbors
 
 	void findEdges(){
 
@@ -41,6 +42,10 @@ struct Mesh{
 
 		e.clear();
 		e.reserve(n);
+
+		nb.clear();
+		nb.resize(v.size());
+
 		std::unordered_set<Edge, EdgeHash> registry;
 		registry.rehash(n*5/4);
 
@@ -50,11 +55,30 @@ struct Mesh{
 				if(registry.count(edge) == 0){
 					registry.insert(edge);
 					e.push_back(edge);
+
+					nb[face[i]].push_back(face[(i+1)%3]);
+					nb[face[(i+1)%3]].push_back(face[i]);
 				}
 			}
 		}
 	}
 };
+
+// vector perpendicular to v
+Vec perp1(Vec v){
+	if(fabs(v.x()) <= fabs(v.y()) && fabs(v.x()) <= fabs(v.z())){
+		return v.cross(Vec(1,0,0)).normalized();
+	}
+	if(fabs(v.y()) <= fabs(v.z())){
+		return v.cross(Vec(0,1,0)).normalized();
+	}
+	return v.cross(Vec(0,0,1)).normalized();
+}
+
+// vector perpendicular to v and perp1(v)
+Vec perp2(Vec v){
+	return v.cross(perp1(v)).normalized();
+}
 
 // curve radius of an edge acc. to https://computergraphics.stackexchange.com/a/1719
 inline double edgeRadius(const Vec& p1, const Vec& n1, const Vec& p2, const Vec& n2){

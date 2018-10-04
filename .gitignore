@@ -4,5 +4,7 @@
 /gallery/
 /config.log
 program*
-/VS
+/VS/Debug
+/VS/Release
+/VS/.vs
 output*

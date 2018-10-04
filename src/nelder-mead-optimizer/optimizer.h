@@ -5,7 +5,10 @@
 #include <vector>
 #include <map>
 #include <cmath>
+#include <limits>
 #include <algorithm>
+
+const double NaN = std::numeric_limits<double>::quiet_NaN();
 
 namespace nmopti{
 

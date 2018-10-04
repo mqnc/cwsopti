@@ -7,6 +7,7 @@
 // using Vec = Eigen::Vector3d;
 // using MatrixXV = Eigen::Matrix<Vec, Eigen::Dynamic, Eigen::Dynamic>;
 
+/*
 Vec perp1(Vec v){
 	if(fabs(v.x()) <= fabs(v.y()) && fabs(v.x()) <= fabs(v.z())){
 		return v.cross(Vec(1,0,0)).normalized();
@@ -20,6 +21,7 @@ Vec perp1(Vec v){
 Vec perp2(Vec v){
 	return v.cross(perp1(v)).normalized();
 }
+*/
 
 class ShBasis{
 public:
